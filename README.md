@@ -2,7 +2,6 @@
   <img src="https://www.theaiautomators.com/wp-content/uploads/2025/07/Group-2651.svg" alt="InsightsLM Logo" width="600"/>
 </p>
 
-
 # InsightsLM: The Open Source NotebookLM Alternative
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -13,7 +12,6 @@
 
 That's exactly what we've done with **InsightsLM**. This project is an open-source, self-hostable alternative to NotebookLM. It's designed to be a powerful AI research tool that grounds its responses exclusively in the sources you provide, making it a reliable window into your company's knowledge base.
 
-
 ## About The Project
 
 NotebookLM is one of the most powerful AI research tools available today. However, its closed-source nature limits its potential for customization and private hosting. InsightsLM was created to bridge this gap.
@@ -22,11 +20,115 @@ This isn't just a basic prototype. It's a robust application with some killer fe
 
 We are open-sourcing InsightsLM so you can install it, customize it, improve it, and even commercialize it. The ability to deploy AI agents grounded in a company's specific knowledge (a concept known as Retrieval-Augmented Generation or RAG) represents one of the biggest commercial opportunities for generative AI today.
 
-
 <p align="center">
-  <img src="https://www.theaiautomators.com/wp-content/uploads/2025/07/Group-2652.png" alt="The AI Automators Logo" width="500"/>
+  <img src="https://www.theaiautomators.com/wp-content/uploads/2025/07/Group-2652.png" alt="The AI Automators Logo" width="500"/>
 </p>
 
+## Technical Documentation
+
+### Application Overview
+
+InsightsLM is a sophisticated React/TypeScript application that serves as an open-source alternative to NotebookLM, allowing users to interact with documents through AI-powered chat and generate podcast-style audio summaries.
+
+### Technology Stack
+
+- **Frontend**: React with TypeScript, Vite build system
+- **UI Framework**: Tailwind CSS with shadcn/ui components
+- **State Management**: React Context API, TanStack Query for server state
+- **Backend**: Supabase (Database, Authentication, Storage, Edge Functions)
+- **Workflow Automation**: N8N for document processing and AI interactions
+- **AI Integration**: Multiple providers (OpenAI, Anthropic, Google Gemini)
+
+### Architecture Analysis
+
+#### Frontend Structure
+The application follows a modern React architecture with clear separation of concerns:
+
+**Core Components**:
+- `App.tsx` - Main application component with routing
+- `AuthContext.tsx` - Authentication state management
+- `Dashboard.tsx` - Main dashboard interface
+- Notebook components for document interaction
+
+**Key Hooks**:
+- `useNotebooks.tsx` - Notebook management
+- `useSources.tsx` - Document source handling
+- `useChatMessages.tsx` - Chat message management
+- `useNotes.tsx` - Note organization
+
+#### Backend Architecture
+
+**Supabase Integration**:
+- Database schema with tables for notebooks, sources, documents, notes, and chat histories
+- Row Level Security (RLS) policies for data protection
+- Real-time subscriptions for live updates
+- Storage buckets for document and audio files
+- Edge functions for server-side processing
+
+**N8N Workflows**:
+- Document processing pipeline for various file types
+- AI chat processing with Retrieval-Augmented Generation (RAG)
+- Audio generation workflow for podcast-style summaries
+- Webhook integrations for asynchronous processing
+
+### Key Features Analysis
+
+#### 1. Document Processing Pipeline
+The application supports multiple document types:
+- PDF files with text extraction
+- Plain text files
+- Website content via URL scraping
+- Audio files (though processing appears to be planned)
+
+Documents are processed through N8N workflows that:
+- Extract text content
+- Generate embeddings for similarity search
+- Store processed content in Supabase
+
+#### 2. AI Chat System
+The chat functionality features:
+- Real-time message streaming
+- Citation support with source highlighting
+- Multiple AI model support (OpenAI, Anthropic, Google)
+- Context-aware responses using RAG
+- Message history persistence
+
+#### 3. Audio Generation
+Podcast-style audio generation:
+- Multi-speaker simulation
+- Source-based content generation
+- Audio file storage and playback
+
+#### 4. Note Organization
+Structured note-taking system:
+- Notebook-based organization
+- Source-linked notes
+- Real-time synchronization
+
+### Database Schema
+
+The Supabase database includes tables for:
+- `notebooks` - Core organizational units
+- `sources` - Document sources
+- `documents` - Processed document content
+- `notes` - User notes
+- `n8n_chat_histories` - Chat message history
+- `audio_files` - Generated audio files
+
+### Security Considerations
+
+- Row Level Security policies ensure data isolation
+- Authentication via Supabase Auth
+- Secure storage for sensitive content
+- API key management through environment variables
+
+### Potential Improvements
+
+1. **Error Handling**: More comprehensive error boundaries and user feedback
+2. **Performance**: Pagination for large datasets
+3. **Testing**: Unit and integration tests for critical components
+4. **Documentation**: More detailed code comments and user guides
+5. **Mobile Responsiveness**: Enhanced mobile experience
 
 ## Fully Local Version
 
@@ -42,7 +144,6 @@ If you're interested in learning how to customize InsightsLM or build similar ap
 
 https://www.theaiautomators.com/
 
-
 ## Key Features
 
 * **Chat with Your Documents:** Upload your documents and get instant, context-aware answers.
@@ -51,7 +152,6 @@ https://www.theaiautomators.com/
 * **Private and Self-Hosted:** Maintain complete control over your data by hosting it yourself. Use local models if you wish.
 * **Customizable and Extensible:** Built with modern, accessible tools, making it easy to tailor to your specific needs.
 
-
 ## Demo & Walkthrough
 
 For a complete demonstration of InsightsLM, an overview of its architecture, and a step-by-step guide on how to set it up, check out our YouTube video:
@@ -59,7 +159,6 @@ For a complete demonstration of InsightsLM, an overview of its architecture, and
 <p>
   <a target="_blank" href="https://www.youtube.com/watch?v=IXJEGjfZRBE"><img src="https://raw.githubusercontent.com/theaiautomators/insights-lm-public/main/public/video.png" alt="Video" width="500"/></a>
 </p>
-
 
 ## Built With
 
@@ -74,7 +173,6 @@ This project is built with a modern, powerful stack:
 * **Backend:**
     * [Supabase](https://supabase.com/) - for database, authentication, and storage.
     * [N8N](https://theaiautomators.com/go/n8n) - for workflow automation and backend logic.
-
 
 ## Getting Started: A Guide for No-Coders to Test and Customize
 
@@ -136,6 +234,6 @@ While InsightsLM is fully open-sourced and Supabase is also open source, it's im
 
 n8n is distributed under a [Sustainable Use License](https://github.com/n8n-io/n8n/blob/master/LICENSE.md). This license allows free usage for internal business purposes, including hosting workflows within your company or organization.
 
-However, if you plan to use InsightsLM as part of a commercial SaaS offering—such as reselling access or hosting a public version for multiple clients—you may need to obtain an n8n Enterprise License. We’re not lawyers, so we recommend that you review the n8n license and contacting their team if your use case falls into a commercial category.
+However, if you plan to use InsightsLM as part of a commercial SaaS offering—such as reselling access or hosting a public version for multiple clients—you may need to obtain an n8n Enterprise License. We're not lawyers, so we recommend that you review the n8n license and contacting their team if your use case falls into a commercial category.
 
 Alternatives: If your use case is restricted by the n8n license, one potential option is to convert key workflows into Supabase Edge Functions. This would allow you to fully avoid using n8n in production.
