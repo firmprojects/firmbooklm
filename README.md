@@ -130,6 +130,47 @@ The Supabase database includes tables for:
 4. **Documentation**: More detailed code comments and user guides
 5. **Mobile Responsiveness**: Enhanced mobile experience
 
+## Database Migration
+
+The database schema has been successfully migrated to Supabase using the MCP tool. The migration includes:
+
+1. **Core Tables**:
+   - `notebooks` - Main organizational units for user content
+   - `sources` - Document sources with metadata and processing status
+   - `documents` - Processed document content with vector embeddings
+   - `notes` - User-created notes linked to notebooks
+   - `n8n_chat_histories` - Chat message history
+   - `profiles` - User profile information
+
+2. **Database Extensions**:
+   - `uuid-ossp` for UUID generation
+   - `vector` for similarity search capabilities
+
+3. **Custom Types**:
+   - `source_type` enum for document source types (pdf, text, website, youtube, audio)
+
+4. **Indexes**:
+   - Performance indexes on foreign keys and frequently queried columns
+   - Vector similarity index for document search
+
+5. **Functions**:
+   - User profile creation trigger
+   - Timestamp update functions
+   - Notebook ownership verification
+   - Document similarity matching
+
+6. **Security**:
+   - Row Level Security policies for all tables
+   - Storage bucket policies for file access control
+
+7. **Realtime**:
+   - Realtime publication for live updates
+   - Replica identity configuration
+
+8. **Storage**:
+   - Configured storage buckets for sources, audio, and public images
+   - RLS policies for secure file access
+
 ## Fully Local Version
 
 This version of InsightsLM relies on cloud AI services like OpenAI and Gemini.
