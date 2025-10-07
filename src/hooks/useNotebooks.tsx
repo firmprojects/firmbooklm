@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -84,11 +83,46 @@ export const useNotebooks = () => {
         (payload) => {
           console.log('Real-time notebook update received:', payload);
           
-          // Invalidate and refetch notebooks when any change occurs
-          queryClient.invalidateQueries({ queryKey: ['notebooks', user.id] });
+          // Handle different types of changes
+          switch (payload.eventType) {
+            case 'INSERT':
+              // For new notebooks, add them to the cache
+              queryClient.setQueryData(['notebooks', user.id], (oldData: any[] = []) => {
+                const newNotebook = payload.new;
+                // Check if notebook already exists to prevent duplicates
+                const exists = oldData.some(notebook => notebook.id === newNotebook.id);
+                if (exists) {
+                  return oldData;
+                }
+                return [newNotebook, ...oldData];
+              });
+              break;
+              
+            case 'UPDATE':
+              // For updated notebooks, update them in the cache
+              queryClient.setQueryData(['notebooks', user.id], (oldData: any[] = []) => {
+                return oldData.map(notebook => 
+                  notebook.id === payload.new.id ? payload.new : notebook
+                );
+              });
+              break;
+              
+            case 'DELETE':
+              // For deleted notebooks, remove them from the cache
+              queryClient.setQueryData(['notebooks', user.id], (oldData: any[] = []) => {
+                return oldData.filter(notebook => notebook.id !== payload.old.id);
+              });
+              break;
+              
+            default:
+              // For other events, invalidate and refetch
+              queryClient.invalidateQueries({ queryKey: ['notebooks', user.id] });
+          }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Real-time subscription status:', status);
+      });
 
     return () => {
       console.log('Cleaning up real-time subscription');
@@ -126,8 +160,16 @@ export const useNotebooks = () => {
       return data;
     },
     onSuccess: (data) => {
-      console.log('Mutation success, invalidating queries');
-      queryClient.invalidateQueries({ queryKey: ['notebooks', user?.id] });
+      console.log('Mutation success, updating cache with new notebook');
+      // Optimistically add the new notebook to the cache
+      queryClient.setQueryData(['notebooks', user?.id], (oldData: any[] = []) => {
+        // Check if notebook already exists to prevent duplicates
+        const exists = oldData.some(notebook => notebook.id === data.id);
+        if (exists) {
+          return oldData;
+        }
+        return [data, ...oldData];
+      });
     },
     onError: (error) => {
       console.error('Mutation error:', error);

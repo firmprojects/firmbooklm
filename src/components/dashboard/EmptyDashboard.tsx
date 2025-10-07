@@ -3,32 +3,45 @@ import { Button } from '@/components/ui/button';
 import { Upload, FileText, Globe, Video, Mic } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useNotebooks } from '@/hooks/useNotebooks';
+
 const EmptyDashboard = () => {
   const navigate = useNavigate();
   const {
     createNotebook,
     isCreating
   } = useNotebooks();
+
   const handleCreateNotebook = () => {
     console.log('Create notebook button clicked');
     console.log('isCreating:', isCreating);
+    
     createNotebook({
       title: 'Untitled notebook',
       description: ''
     }, {
-      onSuccess: data => {
+      onSuccess: (data) => {
+        console.log('Notebook created successfully:', data);
         console.log('Navigating to notebook:', data.id);
-        navigate(`/notebook/${data.id}`);
+        // Add a small delay to ensure the notebook is properly created before navigation
+        setTimeout(() => {
+          navigate(`/notebook/${data.id}`);
+        }, 500);
       },
-      onError: error => {
+      onError: (error) => {
         console.error('Failed to create notebook:', error);
+        // Show error to user
+        alert('Failed to create notebook. Please try again.');
       }
     });
   };
-  return <div className="text-center py-16">
+
+  return (
+    <div className="text-center py-16">
       <div className="mb-12">
         <h2 className="text-3xl font-medium text-gray-900 mb-4">Create your first notebook</h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">InsightsLM is an AI-powered research and writing assistant that works best with the sources you upload</p>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          InsightsLM is an AI-powered research and writing assistant that works best with the sources you upload
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
@@ -57,10 +70,24 @@ const EmptyDashboard = () => {
         </div>
       </div>
 
-      <Button onClick={handleCreateNotebook} size="lg" className="bg-blue-600 hover:bg-blue-700" disabled={isCreating}>
+      <Button 
+        onClick={handleCreateNotebook} 
+        size="lg" 
+        className="bg-blue-600 hover:bg-blue-700" 
+        disabled={isCreating}
+      >
         <Upload className="h-5 w-5 mr-2" />
-        {isCreating ? 'Creating...' : 'Create notebook'}
+        {isCreating ? (
+          <>
+            <span className="animate-spin mr-2">🌀</span>
+            Creating...
+          </>
+        ) : (
+          'Create notebook'
+        )}
       </Button>
-    </div>;
+    </div>
+  );
 };
+
 export default EmptyDashboard;
